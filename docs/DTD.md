@@ -195,6 +195,8 @@ Each subsection lists the exported symbols of one source file and the rules they
 
 **Rule for mixing exact and estimated numbers.** For each direction, a reported value greater than zero is exact. Otherwise the extension uses the estimate and flags that direction as estimated. While a response is open, the output figure is `max(reported output, estimated output)`, because some providers report a tiny placeholder output count at the start of a stream. When a response completes, a reported output greater than zero replaces the estimate.
 
+**Rule for aborted requests.** When the final usage of `completeResponse` is all zeros, the method uses the newest usage reported during the stream, because an aborted response often has no final report.
+
 **Rule for failed requests.** `completeResponse` discards a response that has no reported usage and no estimated output. Such a request failed before the model produced anything, so its input estimate must not count as consumption.
 
 **`formatTokenCount(count: number): string`** returns `"950"`, `"1.2k"`, or `"3.40M"`. **`formatElapsed(ms: number): string`** returns `"12s"` or `"1m 05s"`. **`formatRoundStatus(snapshot: RoundSnapshot): string`** returns the line shown in the specification.
@@ -403,7 +405,7 @@ Unit tests use `node:test` and run without Pi:
 | `TitleBlinker` | Alternation with mocked timers; restored title; idempotent start and stop. |
 | `index.ts` | With a fake `pi` and `ctx`: full round wiring; multiple `agent_start` events; no UI calls outside TUI mode; UI errors are ignored. |
 
-The end-to-end test `tests/e2e/run-tui-smoke.ts` starts the real installed Pi in a pseudo-terminal with a temporary configuration directory, so it never reads real credentials or contacts a real model. `tests/e2e/fake-provider.ts` registers a scripted model that reasons, requests `bash` and `read`, and then answers with slow streaming and exact usage. The test sends two prompts and asserts each [acceptance criterion](../specification.md#acceptance-criteria) on the captured title sequences and on the rebuilt screen, including that the token text is on the last non-empty line.
+The end-to-end test `tests/e2e/run-tui-smoke.ts` starts real Pi 1.4.0 (the development dependency, the same version as the global install) in a pseudo-terminal with a temporary configuration directory, so it never reads real credentials or contacts a real model. `tests/e2e/fake-provider.ts` registers a scripted model that reasons, requests `bash` and `read`, and then answers with slow streaming and exact usage. The test sends two normal prompts and a third prompt that it interrupts with the Escape key. It asserts each [acceptance criterion](../specification.md#acceptance-criteria) on the captured title sequences and on the rebuilt screen, including that the token text is on the last non-empty line.
 
 [↑ Back to Table of Contents](#table-of-contents)
 

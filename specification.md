@@ -174,6 +174,7 @@ flowchart LR
 3. The bottom screen line shows a growing `This round:` count during the round, and `Last round:` with exact numbers after it.
 4. A second prompt resets the count instead of adding to the first round.
 5. The title alternates `🟢` and `🔴` during work and returns to `π - <folder>` afterwards.
-6. Git tracks the project history inside `outputs/pi_extension_claude_code/`.
+6. Pressing Escape during a round ends it, stops the blinking, restores the title, and keeps the `~` mark on estimated figures.
+7. Git tracks the project history inside `outputs/pi_extension_claude_code/`.
 
 [↑ Back to Table of Contents](#table-of-contents)
